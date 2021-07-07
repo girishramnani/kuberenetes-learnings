@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc
+  namespace: girish
+spec:
+  selector:
+    matchLabels:
+      app: svc
+      namespace: girish
+  template:
+    metadata:
+      labels:
+        app: svc
+        namespace: girish
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: svc
+          image: girishramnani/svc:latest
+          ports:
+          - containerPort: 5000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc
+  namespace: girish
+spec:
+  type: ClusterIP
+  selector:
+    app: svc
+    namespace: girish
+  ports:
+  - name: tcp
+    port: 5000
+    targetPort: 5000
